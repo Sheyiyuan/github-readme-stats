@@ -73,11 +73,7 @@ jobs:
           # GitHub Stats 卡片
           echo "Generating GitHub stats card..."
           curl -s "http://localhost:9000/api?username=Sheyiyuan&show_icons=true&hide_border=true&theme=transparent&locale=cn&title_color=3178C6&text_color=999&icon_color=3178C6" \
-            -o assets/cards/github-stats.svg
-          
-          # Top Languages 卡片
-          echo "Generating top languages card..."
-          curl cards/github-stats.svg
+            -o cards/github-stats.svg
           
           # Top Languages 卡片
           echo "Generating top languages card..."
@@ -158,7 +154,7 @@ jobs:
           
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "⏰ **执行时间**: $(date +'%Y-%m-%d %H:%M:%S %Z')" >> $GITHUB_STEP_SUMMARY
-echo "✅ **状态**: 卡片已生成并发布到 Release" >> $GITHUB_STEP_SUMMARY
+          echo "✅ **状态**: 卡片已生成并发布到 Release" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### 生成的卡片" >> $GITHUB_STEP_SUMMARY
           echo "- GitHub 统计卡片" >> $GITHUB_STEP_SUMMARY
