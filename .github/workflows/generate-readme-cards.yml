@@ -20,35 +20,24 @@ jobs:
   generate-cards:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout github-readme-stats
+      - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          path: stats-repo
-
-      - name: Checkout Sheyiyuan repository
-        uses: actions/checkout@v4
-        with:
-          repository: Sheyiyuan/Sheyiyuan
-          token: ${{ secrets.GITHUB_TOKEN }}
-          path: target-repo
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: 'pnpm'
-          cache-dependency-path: stats-repo/pnpm-lock.yaml
+          cache-dependency-path: pnpm-lock.yaml
 
       - name: Install pnpm
         run: npm install -g pnpm
 
       - name: Install dependencies
-        working-directory: stats-repo
         run: pnpm install --frozen-lockfile
 
       - name: Load configuration
         id: config
-        working-directory: stats-repo
         run: |
           # 读取配置文件
           if [ -f .github/cards-config.yml ]; then
@@ -59,7 +48,6 @@ jobs:
           fi
 
       - name: Start API server
-        working-directory: stats-repo
         run: |
           # 启动API服务器
           node express.js &
@@ -79,9 +67,8 @@ jobs:
           PAT_1: ${{ secrets.GH_PAT }}
 
       - name: Generate cards
-        working-directory: target-repo
         run: |
-          mkdir -p assets/cards
+          mkdir -p cards
           
           # GitHub Stats 卡片
           echo "Generating GitHub stats card..."
@@ -90,71 +77,42 @@ jobs:
           
           # Top Languages 卡片
           echo "Generating top languages card..."
+          curl cards/github-stats.svg
+          
+          # Top Languages 卡片
+          echo "Generating top languages card..."
           curl -s "http://localhost:9000/api/top-langs/?username=Sheyiyuan&theme=transparent&hide_border=true&layout=compact&langs_count=6&locale=cn&hide=html,css,dockerfile,shell,powershell&size_weight=0&count_weight=1&title_color=3178C6&text_color=999" \
-            -o assets/cards/top-langs.svg
+            -o cards/top-langs.svg
           
           # Half-Beat-Player 项目卡片（带技术栈）
           echo "Generating Half-Beat-Player card..."
           curl -s "http://localhost:9000/api/pin-custom/?username=Sheyiyuan&repo=Half-Beat-Player&theme=transparent&hide_border=true&title_color=3178C6&text_color=999&icon_color=3178C6&show_owner=true&tech_stack=Wails,Go,Vue,TypeScript" \
-            -o assets/cards/half-beat-player.svg
+            -o cards/half-beat-player.svg
           
           # tuan-chat-web 项目卡片（带技术栈）
           echo "Generating tuan-chat-web card..."
           curl -s "http://localhost:9000/api/pin-custom/?username=starrybamboo&repo=tuan-chat-web&theme=transparent&hide_border=true&title_color=3178C6&text_color=999&icon_color=3178C6&show_owner=true&tech_stack=React,TypeScript,Vite" \
-            -o assets/cards/tuan-chat-web.svg
+            -o cards/tuan-chat-web.svg
           
           echo "All cards generated successfully"
-          ls -lh assets/cards/
-
-      - name: Stop API server
-        if: always()
-        run: |
+          ls -lh 
           if [ ! -z "$SERVER_PID" ]; then
             kill $SERVER_PID 2>/dev/null || true
           fi
 
-      - name: Check for changes
-        id: changes
-        working-directory: target-repo
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          
-          if git diff --quiet assets/cards/; then
-            echo "has_changes=false" >> $GITHUB_OUTPUT
-            echo "No changes detected"
-          else
-            echo "has_changes=true" >> $GITHUB_OUTPUT
-            echo "Changes detected in cards"
-          fi
-
-      - name: Commit and push changes
-        if: steps.changes.outputs.has_changes == 'true'
-        working-directory: target-repo
-        run: |
-          git add assets/cards/
-          git commit -m "chore: 🔄 自动更新 GitHub README 卡片 [skip ci]
-
-          - 更新时间: $(date +'%Y-%m-%d %H:%M:%S %Z')
-          - 包含卡片:
-            * GitHub 统计卡片
-            * 语言统计卡片
-            * Half-Beat-Player 项目卡片
-            * tuan-chat-web 项目卡片
-          
-          🤖 由 GitHub Actions 自动生成"
-          
-          git push
-
-      - name: Create Release
-        if: steps.changes.outputs.has_changes == 'true'
-        working-directory: target-repo
+      - name: Create Release with latest tag
         run: |
           TIMESTAMP=$(date +'%Y%m%d-%H%M%S')
-          TAG_NAME="cards-$TIMESTAMP"
+          TAG_NAME="cards-latest"
+          RELEASE_NAME="README Cards - $(date +'%Y-%m-%d %H:%M:%S')"
           
+          # 删除旧的 latest release 和 tag（如果存在）
+          gh release delete "$TAG_NAME" --yes 2>/dev/null || true
+          git push --delete origin "$TAG_NAME" 2>/dev/null || true
+          
+          # 创建新的 release
           gh release create "$TAG_NAME" \
-            --title "README Cards - $TIMESTAMP" \
+            --title "$RELEASE_NAME" \
             --notes "📊 自动生成的 GitHub README 卡片
 
           **生成时间**: $(date +'%Y-%m-%d %H:%M:%S %Z')
@@ -165,10 +123,18 @@ jobs:
           - Half-Beat-Player 项目卡片 (half-beat-player.svg)
           - tuan-chat-web 项目卡片 (tuan-chat-web.svg)
           
+          **使用方法**:
+          \`\`\`markdown
+          ![GitHub Stats](https://github.com/Sheyiyuan/github-readme-stats/releases/download/cards-latest/github-stats.svg)
+          ![Top Languages](https://github.com/Sheyiyuan/github-readme-stats/releases/download/cards-latest/top-langs.svg)
+          ![Half Beat Player](https://github.com/Sheyiyuan/github-readme-stats/releases/download/cards-latest/half-beat-player.svg)
+          ![Tuan Chat Web](https://github.com/Sheyiyuan/github-readme-stats/releases/download/cards-latest/tuan-chat-web.svg)
+          \`\`\`
+          
           这些卡片使用自定义的 pin-custom API，支持技术栈徽章显示。
           
           🤖 由 GitHub Actions 自动生成" \
-            assets/cards/*.svg
+            cards/*.svg
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -192,3 +158,17 @@ jobs:
           
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "⏰ **执行时间**: $(date +'%Y-%m-%d %H:%M:%S %Z')" >> $GITHUB_STEP_SUMMARY
+echo "✅ **状态**: 卡片已生成并发布到 Release" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 生成的卡片" >> $GITHUB_STEP_SUMMARY
+          echo "- GitHub 统计卡片" >> $GITHUB_STEP_SUMMARY
+          echo "- 语言统计卡片" >> $GITHUB_STEP_SUMMARY
+          echo "- Half-Beat-Player 项目卡片 (带技术栈)" >> $GITHUB_STEP_SUMMARY
+          echo "- tuan-chat-web 项目卡片 (带技术栈)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 使用方法" >> $GITHUB_STEP_SUMMARY
+          echo "在 Sheyiyuan/Sheyiyuan README 中使用以下 URL:" >> $GITHUB_STEP_SUMMARY
+          echo '```markdown' >> $GITHUB_STEP_SUMMARY
+          echo "![Stats](https://github.com/Sheyiyuan/github-readme-stats/releases/download/cards-latest/github-stats.svg)" >> $GITHUB_STEP_SUMMARY
+          echo "![Langs](https://github.com/Sheyiyuan/github-readme-stats/releases/download/cards-latest/top-langs.svg)" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
