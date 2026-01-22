@@ -1,19 +1,13 @@
 name: Test Deployment
 on:
-  # Temporarily disabled automatic triggers; manual-only for now.
+  # Disabled for forked repository
   workflow_dispatch:
-  # Original trigger (restore to re-enable):
-  # deployment_status:
 
 permissions: read-all
 
 jobs:
   e2eTests:
-    # Temporarily disabled; set to the original condition to re-enable.
-    # if:
-    #   github.repository == 'anuraghazra/github-readme-stats' &&
-    #   github.event_name == 'deployment_status' &&
-    #   github.event.deployment_status.state == 'success'
+    # Disabled for forked repository
     if: false
     name: Perform e2e tests
     runs-on: ubuntu-latest

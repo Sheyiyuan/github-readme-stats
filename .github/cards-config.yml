@@ -1,0 +1,81 @@
+# GitHub README Cards Configuration
+# 配置自动生成的卡片参数
+
+# 目标仓库配置
+target:
+  repository: Sheyiyuan/Sheyiyuan
+  path: assets/cards
+
+# API 服务器配置
+server:
+  base_url: http://localhost:9000
+
+# 卡片配置
+cards:
+  # GitHub 统计卡片
+  - name: github-stats
+    filename: github-stats.svg
+    endpoint: /api
+    params:
+      username: Sheyiyuan
+      show_icons: true
+      hide_border: true
+      theme: transparent
+      locale: cn
+      title_color: 3178C6
+      text_color: 999
+      icon_color: 3178C6
+
+  # 语言统计卡片
+  - name: top-langs
+    filename: top-langs.svg
+    endpoint: /api/top-langs/
+    params:
+      username: Sheyiyuan
+      theme: transparent
+      hide_border: true
+      layout: compact
+      langs_count: 6
+      locale: cn
+      hide: html,css,dockerfile,shell,powershell
+      size_weight: 0
+      count_weight: 1
+      title_color: 3178C6
+      text_color: 999
+
+  # Half-Beat-Player 项目卡片（自定义版本，带技术栈）
+  - name: half-beat-player
+    filename: half-beat-player.svg
+    endpoint: /api/pin-custom/
+    params:
+      username: Sheyiyuan
+      repo: Half-Beat-Player
+      theme: transparent
+      hide_border: true
+      title_color: 3178C6
+      text_color: 999
+      icon_color: 3178C6
+      show_owner: true
+      tech_stack: Wails,Go,Vue,TypeScript
+
+  # tuan-chat-web 项目卡片（自定义版本，带技术栈）
+  - name: tuan-chat-web
+    filename: tuan-chat-web.svg
+    endpoint: /api/pin-custom/
+    params:
+      username: starrybamboo
+      repo: tuan-chat-web
+      theme: transparent
+      hide_border: true
+      title_color: 3178C6
+      text_color: 999
+      icon_color: 3178C6
+      show_owner: true
+      tech_stack: React,TypeScript,Vite
+
+# Release 配置
+release:
+  enabled: true
+  tag_prefix: cards-
+  title_format: "README Cards - %Y%m%d-%H%M%S"
+  include_timestamp: true
