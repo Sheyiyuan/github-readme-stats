@@ -7,7 +7,7 @@ import { kFormatter } from "../common/fmt.js";
 import { encodeHTML } from "../common/html.js";
 import { I18n } from "../common/I18n.js";
 import { icons } from "../common/icons.js";
-import { clampValue, parseEmojis, parseArray } from "../common/ops.js";
+import { parseEmojis, parseArray } from "../common/ops.js";
 import {
     flexLayout,
     measureText,
