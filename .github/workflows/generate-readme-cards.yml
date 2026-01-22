@@ -73,22 +73,22 @@ jobs:
           
           # GitHub Stats 卡片
           echo "Generating GitHub stats card..."
-          curl -s "http://localhost:9000/api?username=Sheyiyuan&show_icons=true&hide_border=true&theme=transparent&locale=cn&title_color=3178C6&text_color=999&icon_color=3178C6" \
+          curl -s "http://localhost:9000/api?username=Sheyiyuan&show_icons=true&hide_border=true&locale=cn&bg_color=00000000&title_color=3178C6&text_color=666666&icon_color=3178C6&hide_rank=true" \
             -o cards/github-stats.svg
           
           # Top Languages 卡片
           echo "Generating top languages card..."
-          curl -s "http://localhost:9000/api/top-langs/?username=Sheyiyuan&theme=transparent&hide_border=true&layout=compact&langs_count=6&locale=cn&hide=html,css,dockerfile,shell,powershell&size_weight=0&count_weight=1&title_color=3178C6&text_color=999" \
+          curl -s "http://localhost:9000/api/top-langs/?username=Sheyiyuan&hide_border=true&layout=compact&langs_count=8&locale=cn&hide=html,css,dockerfile,shell,powershell&size_weight=0.5&count_weight=0.5&bg_color=00000000&title_color=3178C6&text_color=666666" \
             -o cards/top-langs.svg
           
           # Half-Beat-Player 项目卡片（带技术栈）
           echo "Generating Half-Beat-Player card..."
-          curl -s "http://localhost:9000/api/pin-custom/?username=Sheyiyuan&repo=Half-Beat-Player&theme=transparent&hide_border=true&title_color=3178C6&text_color=999&icon_color=3178C6&show_owner=true&tech_stack=Wails,Go,Vue,TypeScript" \
+          curl -s "http://localhost:9000/api/pin-custom/?username=Sheyiyuan&repo=Half-Beat-Player&hide_border=true&bg_color=00000000&title_color=3178C6&text_color=666666&icon_color=3178C6&show_owner=false&tech_stack=Wails,Go,Vue,TypeScript&description_lines_count=3" \
             -o cards/half-beat-player.svg
           
           # tuan-chat-web 项目卡片（带技术栈）
           echo "Generating tuan-chat-web card..."
-          curl -s "http://localhost:9000/api/pin-custom/?username=starrybamboo&repo=tuan-chat-web&theme=transparent&hide_border=true&title_color=3178C6&text_color=999&icon_color=3178C6&show_owner=true&tech_stack=React,TypeScript,Vite" \
+          curl -s "http://localhost:9000/api/pin-custom/?username=starrybamboo&repo=tuan-chat-web&hide_border=true&bg_color=00000000&title_color=3178C6&text_color=666666&icon_color=3178C6&show_owner=false&tech_stack=React,TypeScript,Vite&description_lines_count=3" \
             -o cards/tuan-chat-web.svg
           
           echo "All cards generated successfully"
