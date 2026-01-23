@@ -138,6 +138,9 @@ jobs:
       - name: Generate summary
         if: always()
         run: |
+          # 设置时区为北京时间
+          export TZ='Asia/Shanghai'
+          
           echo "## 📊 GitHub README Cards Generation" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           
@@ -154,7 +157,7 @@ jobs:
           fi
           
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "⏰ **执行时间**: $(date +'%Y-%m-%d %H:%M:%S %Z')" >> $GITHUB_STEP_SUMMARY
+          echo "⏰ **执行时间**: $(date +'%Y-%m-%d %H:%M:%S') 北京时间" >> $GITHUB_STEP_SUMMARY
           echo "✅ **状态**: 卡片已生成并发布到 Release" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### 生成的卡片" >> $GITHUB_STEP_SUMMARY
