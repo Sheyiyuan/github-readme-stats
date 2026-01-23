@@ -6,6 +6,7 @@ node_modules
 coverage
 benchmarks
 vercel_token
+test-output/
 
 # IDE
 .vscode/*
