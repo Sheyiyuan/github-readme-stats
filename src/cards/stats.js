@@ -205,6 +205,9 @@ const getStyles = ({
       fill: ${iconColor};
       display: ${show_icons ? "block" : "none"};
     }
+    .icon path {
+      fill: ${iconColor};
+    }
 
     .rank-circle-rim {
       stroke: ${ringColor};

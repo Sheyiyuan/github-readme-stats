@@ -56,7 +56,7 @@ cards:
       text_color: 999
       icon_color: 3178C6
       show_owner: true
-      tech_stack: Wails,Go,Vue,TypeScript
+      tech_stack: Wails,Go,React,TypeScript
 
   # tuan-chat-web 项目卡片（自定义版本，带技术栈）
   - name: tuan-chat-web
