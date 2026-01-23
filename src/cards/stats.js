@@ -192,12 +192,6 @@ const getStyles = ({
       font: 800 24px 'Segoe UI', Ubuntu, Sans-Serif; fill: ${textColor};
       animation: scaleInAnimation 0.3s ease-in-out forwards;
     }
-    .rank-text text {
-      fill: ${textColor};
-    }
-    .rank-text path {
-      fill: ${textColor};
-    }
     .rank-percentile-header {
       font-size: 14px;
     }
@@ -303,6 +297,8 @@ const renderStatsCard = (stats, options = {}) => {
     locale,
     disable_animations = false,
     rank_icon = "default",
+    rank_icon_x_offset = 0,
+    rank_icon_y_offset = 0,
     show = [],
   } = options;
 
@@ -569,7 +565,13 @@ const renderStatsCard = (stats, options = {}) => {
         <circle class="rank-circle-rim" cx="-10" cy="8" r="40" />
         <circle class="rank-circle" cx="-10" cy="8" r="40" />
         <g class="rank-text">
-          ${rankIcon(rank_icon, rank?.level, rank?.percentile)}
+          ${rankIcon(
+            rank_icon,
+            rank?.level,
+            rank?.percentile,
+            parseFloat(rank_icon_x_offset),
+            parseFloat(rank_icon_y_offset),
+          )}
         </g>
       </g>`;
 
