@@ -11,9 +11,11 @@ const __dirname = path.dirname(__filename);
  *
  * @param {string} style - The icon style folder name
  * @param {string} level - The rank level (S, A+, A, etc.)
+ * @param {number} xOffset - Horizontal offset (default: 0)
+ * @param {number} yOffset - Vertical offset (default: 0)
  * @returns {string|null} - The icon content or null if not found
  */
-const loadRankIconFromFile = (style, level) => {
+const loadRankIconFromFile = (style, level, xOffset = 0, yOffset = 0) => {
   const extensions = [".svg", ".png", ".jpg", ".jpeg", ".webp"];
   const assetsDir = path.join(__dirname, "../../assets/rank-icons", style);
 
@@ -37,9 +39,11 @@ const loadRankIconFromFile = (style, level) => {
           // 为 SVG 添加默认的位置和尺寸属性（如果没有的话）
           // 圆心在 (-10, 8)，50x50 的图标居中应该是 x=-35, y=-17
           if (!svgContent.includes(" x=")) {
+            const baseX = -35 + xOffset;
+            const baseY = -17 + yOffset;
             svgContent = svgContent.replace(
               "<svg",
-              '<svg x="-35" y="-17" width="50" height="50"',
+              `<svg x="${baseX}" y="${baseY}" width="50" height="50"`,
             );
           }
         }
@@ -58,10 +62,12 @@ const loadRankIconFromFile = (style, level) => {
       const mimeType = mimeTypes[ext];
 
       // 圆心在 (-10, 8)，50x50 的图标居中应该是 x=-35, y=-17
+      const baseX = -35 + xOffset;
+      const baseY = -17 + yOffset;
       return `
         <image 
           href="data:${mimeType};base64,${base64}" 
-          x="-35" y="-17" 
+          x="${baseX}" y="${baseY}" 
           width="50" height="50"
         />
       `;
@@ -93,13 +99,21 @@ const icons = {
  * @param {string} rankIcon - The rank icon type.
  * @param {string} rankLevel - The rank level.
  * @param {number} percentile - The rank percentile.
+ * @param {number} xOffset - Horizontal offset (default: 0)
+ * @param {number} yOffset - Vertical offset (default: 0)
  * @returns {string} - The SVG code of the rank icon
  */
-const rankIcon = (rankIcon, rankLevel, percentile) => {
+const rankIcon = (
+  rankIcon,
+  rankLevel,
+  percentile,
+  xOffset = 0,
+  yOffset = 0,
+) => {
   // 检查是否使用 global/xx 格式（全局统一图标）
   if (rankIcon && rankIcon.startsWith("global/")) {
     const iconName = rankIcon.substring(7); // 移除 'global/' 前缀
-    const fileIcon = loadRankIconFromFile("global", iconName);
+    const fileIcon = loadRankIconFromFile("global", iconName, xOffset, yOffset);
     if (fileIcon) {
       return fileIcon;
     }
@@ -110,7 +124,12 @@ const rankIcon = (rankIcon, rankLevel, percentile) => {
 
   // 如果不是内置类型，尝试从文件加载（按等级）
   if (rankIcon && !["github", "percentile", "default"].includes(rankIcon)) {
-    const fileIcon = loadRankIconFromFile(rankIcon, rankLevel);
+    const fileIcon = loadRankIconFromFile(
+      rankIcon,
+      rankLevel,
+      xOffset,
+      yOffset,
+    );
     if (fileIcon) {
       return fileIcon;
     }
