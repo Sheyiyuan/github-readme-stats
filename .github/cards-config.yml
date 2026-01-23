@@ -23,8 +23,11 @@ cards:
       theme: transparent
       locale: cn
       title_color: 3178C6
-      text_color: 999
+      text_color: 666666
       icon_color: 3178C6
+      rank_icon: global/default
+      rank_icon_x_offset: 4
+      rank_icon_y_offset: -4
 
   # 语言统计卡片
   - name: top-langs
@@ -35,13 +38,13 @@ cards:
       theme: transparent
       hide_border: true
       layout: compact
-      langs_count: 6
+      langs_count: 8
       locale: cn
       hide: html,css,dockerfile,shell,powershell
-      size_weight: 0
-      count_weight: 1
+      size_weight: 0.5
+      count_weight: 0.5
       title_color: 3178C6
-      text_color: 999
+      text_color: 666666
 
   # Half-Beat-Player 项目卡片（自定义版本，带技术栈）
   - name: half-beat-player
@@ -53,10 +56,11 @@ cards:
       theme: transparent
       hide_border: true
       title_color: 3178C6
-      text_color: 999
+      text_color: 666666
       icon_color: 3178C6
-      show_owner: true
-      tech_stack: Wails,Go,React,TypeScript
+      show_owner: false
+      tech_stack: Wails,Go,Vue,TypeScript
+      description_lines_count: 3
 
   # tuan-chat-web 项目卡片（自定义版本，带技术栈）
   - name: tuan-chat-web
@@ -68,10 +72,11 @@ cards:
       theme: transparent
       hide_border: true
       title_color: 3178C6
-      text_color: 999
+      text_color: 666666
       icon_color: 3178C6
-      show_owner: true
+      show_owner: false
       tech_stack: React,TypeScript,Vite
+      description_lines_count: 3
 
 # Release 配置
 release:

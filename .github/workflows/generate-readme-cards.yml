@@ -40,6 +40,10 @@ jobs:
       - name: Load configuration
         id: config
         run: |
+          # 安装 yq 用于解析 YAML
+          sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+          sudo chmod +x /usr/local/bin/yq
+          
           # 读取配置文件
           if [ -f .github/cards-config.yml ]; then
             echo "Configuration file found"
@@ -71,28 +75,51 @@ jobs:
         run: |
           mkdir -p cards
           
-          # GitHub Stats 卡片
-          echo "Generating GitHub stats card..."
-          curl -s "http://localhost:9000/api?username=Sheyiyuan&show_icons=true&hide_border=true&locale=cn&bg_color=00000000&title_color=3178C6&text_color=666666&icon_color=3178C6&rank_icon=global/default&rank_icon_x_offset=2&rank_icon_y_offset=-2" \
-            -o cards/github-stats.svg
+          # 读取配置文件
+          CONFIG_FILE=".github/cards-config.yml"
           
-          # Top Languages 卡片
-          echo "Generating top languages card..."
-          curl -s "http://localhost:9000/api/top-langs/?username=Sheyiyuan&hide_border=true&layout=compact&langs_count=8&locale=cn&hide=html,css,dockerfile,shell,powershell&size_weight=0.5&count_weight=0.5&bg_color=00000000&title_color=3178C6&text_color=666666" \
-            -o cards/top-langs.svg
+          # 获取卡片数量
+          CARD_COUNT=$(yq '.cards | length' $CONFIG_FILE)
           
-          # Half-Beat-Player 项目卡片（带技术栈）
-          echo "Generating Half-Beat-Player card..."
-          curl -s "http://localhost:9000/api/pin-custom/?username=Sheyiyuan&repo=Half-Beat-Player&hide_border=true&bg_color=00000000&title_color=3178C6&text_color=666666&icon_color=3178C6&show_owner=false&tech_stack=Wails,Go,Vue,TypeScript&description_lines_count=3" \
-            -o cards/half-beat-player.svg
-          
-          # tuan-chat-web 项目卡片（带技术栈）
-          echo "Generating tuan-chat-web card..."
-          curl -s "http://localhost:9000/api/pin-custom/?username=starrybamboo&repo=tuan-chat-web&hide_border=true&bg_color=00000000&title_color=3178C6&text_color=666666&icon_color=3178C6&show_owner=false&tech_stack=React,TypeScript,Vite&description_lines_count=3" \
-            -o cards/tuan-chat-web.svg
+          # 遍历所有卡片配置
+          for i in $(seq 0 $((CARD_COUNT - 1))); do
+            # 读取基本信息
+            NAME=$(yq ".cards[$i].name" $CONFIG_FILE)
+            FILENAME=$(yq ".cards[$i].filename" $CONFIG_FILE)
+            ENDPOINT=$(yq ".cards[$i].endpoint" $CONFIG_FILE)
+            BASE_URL=$(yq ".server.base_url" $CONFIG_FILE)
+            
+            echo "Generating $NAME card..."
+            
+            # 构建参数字符串
+            PARAMS=""
+            PARAM_KEYS=$(yq ".cards[$i].params | keys | .[]" $CONFIG_FILE)
+            
+            while IFS= read -r key; do
+              value=$(yq ".cards[$i].params.$key" $CONFIG_FILE)
+              # 处理 theme: transparent，转换为 bg_color
+              if [ "$key" = "theme" ] && [ "$value" = "transparent" ]; then
+                PARAMS="${PARAMS}&bg_color=00000000"
+              else
+                PARAMS="${PARAMS}&${key}=${value}"
+              fi
+            done <<< "$PARAM_KEYS"
+            
+            # 去掉开头的 &
+            PARAMS="${PARAMS:1}"
+            
+            # 发起请求
+            curl -s "${BASE_URL}${ENDPOINT}?${PARAMS}" -o "cards/${FILENAME}"
+            
+            echo "✓ Generated cards/${FILENAME}"
+          done
           
           echo "All cards generated successfully"
-          ls -lh 
+          ls -lh cards/
+          
+      - name: Stop API server
+        if: always()
+        run: |
           if [ ! -z "$SERVER_PID" ]; then
             kill $SERVER_PID 2>/dev/null || true
           fi
