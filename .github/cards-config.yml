@@ -41,8 +41,8 @@ cards:
       langs_count: 8
       locale: cn
       hide: html,css,dockerfile,shell,powershell
-      size_weight: 0.5
-      count_weight: 0.5
+      size_weight: 0
+      count_weight: 1
       title_color: 3178C6
       text_color: 666666
 
@@ -76,6 +76,38 @@ cards:
       icon_color: 3178C6
       show_owner: false
       tech_stack: React,TypeScript,Vite
+      description_lines_count: 3
+
+  # Anan-s-Sketchbook-Chat-Box 项目卡片（自定义版本，带技术栈）
+  - name: anan-s-sketchbook-chat-box
+    filename: anan-s-sketchbook-chat-box.svg
+    endpoint: /api/pin-custom/
+    params:
+      username: Sheyiyuan
+      repo: Anan-s-Sketchbook-Chat-Box
+      theme: transparent
+      hide_border: true
+      title_color: 3178C6
+      text_color: 666666
+      icon_color: 3178C6
+      show_owner: false
+      tech_stack: Vue,TypeScript,Vite
+      description_lines_count: 3
+
+  # ShyeriMeme 项目卡片（自定义版本，带技术栈）
+  - name: shyerimeme
+    filename: shyerimeme.svg
+    endpoint: /api/pin-custom/
+    params:
+      username: Sheyiyuan
+      repo: ShyeriMeme
+      theme: transparent
+      hide_border: true
+      title_color: 3178C6
+      text_color: 666666
+      icon_color: 3178C6
+      show_owner: false
+      tech_stack: JavaScript,HTML,CSS
       description_lines_count: 3
 
 # Release 配置

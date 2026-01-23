@@ -133,6 +133,10 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           
+          # 在切换分支前保存配置文件内容到临时文件
+          CONFIG_FILE=".github/cards-config.yml"
+          cp "$CONFIG_FILE" /tmp/cards-config.yml
+          
           # 创建或切换到 gh-pages 分支
           git fetch origin gh-pages 2>/dev/null || true
           if git rev-parse --verify origin/gh-pages >/dev/null 2>&1; then
@@ -146,8 +150,8 @@ jobs:
           # 复制生成的卡片
           cp -r cards/*.svg .
           
-          # 动态生成 index.html
-          CONFIG_FILE="../.github/cards-config.yml"
+          # 使用之前保存的配置文件
+          CONFIG_FILE="/tmp/cards-config.yml"
           
           # 生成 HTML 头部
           cat > index.html << 'HTMLEOF'
