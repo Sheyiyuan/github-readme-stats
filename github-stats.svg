@@ -36,12 +36,6 @@
       font: 800 24px 'Segoe UI', Ubuntu, Sans-Serif; fill: #666666;
       animation: scaleInAnimation 0.3s ease-in-out forwards;
     }
-    .rank-text text {
-      fill: #666666;
-    }
-    .rank-text path {
-      fill: #666666;
-    }
     .rank-percentile-header {
       font-size: 14px;
     }
