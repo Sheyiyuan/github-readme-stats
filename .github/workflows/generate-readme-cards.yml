@@ -208,65 +208,57 @@ jobs:
           git push --delete origin "$TAG_NAME" 2>/dev/null || true
           
           # 创建新的 release（不上传文件，只作为使用说明）
+          cat > release-notes.md << 'RELEASEEOF'
+          📊 GitHub README 卡片使用说明
+          
+          **更新时间**: TIMESTAMP_PLACEHOLDER
+          
+          卡片已部署到 GitHub Pages，可通过以下方式使用。
+          
+          ---
+          
+          ## 📝 Markdown 格式
+          
+          ```markdown
+          ![GitHub Stats](https://sheyiyuan.github.io/github-readme-stats/github-stats.svg)
+          ![Top Languages](https://sheyiyuan.github.io/github-readme-stats/top-langs.svg)
+          ![Half Beat Player](https://sheyiyuan.github.io/github-readme-stats/half-beat-player.svg)
+          ![Tuan Chat Web](https://sheyiyuan.github.io/github-readme-stats/tuan-chat-web.svg)
+          ```
+          
+          ---
+          
+          ## 🌐 HTML 格式
+          
+          ```html
+          <img src="https://sheyiyuan.github.io/github-readme-stats/github-stats.svg" alt="GitHub Stats">
+          <img src="https://sheyiyuan.github.io/github-readme-stats/top-langs.svg" alt="Top Languages">
+          <img src="https://sheyiyuan.github.io/github-readme-stats/half-beat-player.svg" alt="Half Beat Player">
+          <img src="https://sheyiyuan.github.io/github-readme-stats/tuan-chat-web.svg" alt="Tuan Chat Web">
+          ```
+          
+          ---
+          
+          ## 🔗 在线预览
+          
+          访问 [https://sheyiyuan.github.io/github-readme-stats/](https://sheyiyuan.github.io/github-readme-stats/) 查看所有卡片。
+          
+          ## ✨ 特性
+          
+          - ✅ 通过 GitHub Pages 托管，免费且稳定
+          - ✅ 全球 CDN 加速访问
+          - ✅ 每日自动更新（北京时间 00:00）
+          - ✅ 自定义技术栈徽章显示
+          - ✅ 支持 Markdown 和 HTML 两种引用方式
+          
+          🤖 由 GitHub Actions 自动生成
+          RELEASEEOF
+          
+          sed -i "s/TIMESTAMP_PLACEHOLDER/$(date +'%Y-%m-%d %H:%M:%S') 北京时间/" release-notes.md
+          
           gh release create "$TAG_NAME" \
             --title "$RELEASE_NAME" \
-            --notes "📊 GitHub README 卡片使用说明
-
-**更新时间**: $(date +'%Y-%m-%d %H:%M:%S') 北京时间
-
-卡片已部署到 GitHub Pages，可通过以下方式使用：
-
----
-
-## 📝 Markdown 格式
-
-\`\`\`markdown
-# GitHub 统计卡片
-![GitHub Stats](https://sheyiyuan.github.io/github-readme-stats/github-stats.svg)
-
-# 语言统计卡片
-![Top Languages](https://sheyiyuan.github.io/github-readme-stats/top-langs.svg)
-
-# Half-Beat-Player 项目卡片
-![Half Beat Player](https://sheyiyuan.github.io/github-readme-stats/half-beat-player.svg)
-
-# tuan-chat-web 项目卡片
-![Tuan Chat Web](https://sheyiyuan.github.io/github-readme-stats/tuan-chat-web.svg)
-\`\`\`
-
----
-
-## 🌐 HTML 格式
-
-\`\`\`html
-<!-- GitHub 统计卡片 -->
-<img src=\"https://sheyiyuan.github.io/github-readme-stats/github-stats.svg\" alt=\"GitHub Stats\">
-
-<!-- 语言统计卡片 -->
-<img src=\"https://sheyiyuan.github.io/github-readme-stats/top-langs.svg\" alt=\"Top Languages\">
-
-<!-- Half-Beat-Player 项目卡片 -->
-<img src=\"https://sheyiyuan.github.io/github-readme-stats/half-beat-player.svg\" alt=\"Half Beat Player\">
-
-<!-- tuan-chat-web 项目卡片 -->
-<img src=\"https://sheyiyuan.github.io/github-readme-stats/tuan-chat-web.svg\" alt=\"Tuan Chat Web\">
-\`\`\`
-
----
-
-## 🔗 在线预览
-
-访问 [https://sheyiyuan.github.io/github-readme-stats/](https://sheyiyuan.github.io/github-readme-stats/) 查看所有卡片。
-
-## ✨ 特性
-
-- ✅ 通过 GitHub Pages 托管，免费且稳定
-- ✅ 全球 CDN 加速访问
-- ✅ 每日自动更新（北京时间 00:00）
-- ✅ 自定义技术栈徽章显示
-- ✅ 支持 Markdown 和 HTML 两种引用方式
-
-🤖 由 GitHub Actions 自动生成"
+            --notes-file release-notes.md
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
