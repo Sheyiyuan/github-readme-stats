@@ -146,7 +146,10 @@ jobs:
           # 复制生成的卡片
           cp -r cards/*.svg .
           
-          # 创建 index.html 以便浏览
+          # 动态生成 index.html
+          CONFIG_FILE="../.github/cards-config.yml"
+          
+          # 生成 HTML 头部
           cat > index.html << 'HTMLEOF'
           <!DOCTYPE html>
           <html lang="zh-CN">
@@ -166,42 +169,32 @@ jobs:
           <body>
             <h1>GitHub README Cards</h1>
             <p>自动生成的 GitHub 统计卡片，可直接在 README 中使用。</p>
+          HTMLEOF
+          
+          # 动态生成每个卡片的展示区块
+          CARD_COUNT=$(yq '.cards | length' $CONFIG_FILE)
+          for i in $(seq 0 $((CARD_COUNT - 1))); do
+            NAME=$(yq ".cards[$i].name" $CONFIG_FILE)
+            FILENAME=$(yq ".cards[$i].filename" $CONFIG_FILE)
+            
+            # 生成卡片标题（美化名称）
+            DISPLAY_NAME=$(echo "$NAME" | sed 's/-/ /g' | sed 's/\b\(.\)/\u\1/g')
+            
+            cat >> index.html << CARDEOF
             
             <div class="card">
-              <h2>GitHub 统计卡片</h2>
-              <img src="github-stats.svg" alt="GitHub Stats">
+              <h2>${DISPLAY_NAME}</h2>
+              <img src="${FILENAME}" alt="${DISPLAY_NAME}">
               <h3>Markdown 使用方式</h3>
-              <pre>![GitHub Stats](https://sheyiyuan.github.io/github-readme-stats/github-stats.svg)</pre>
+              <pre>![${DISPLAY_NAME}](https://sheyiyuan.github.io/github-readme-stats/${FILENAME})</pre>
               <h3>HTML 使用方式</h3>
-              <pre>&lt;img src="https://sheyiyuan.github.io/github-readme-stats/github-stats.svg" alt="GitHub Stats"&gt;</pre>
+              <pre>&lt;img src="https://sheyiyuan.github.io/github-readme-stats/${FILENAME}" alt="${DISPLAY_NAME}"&gt;</pre>
             </div>
-            
-            <div class="card">
-              <h2>语言统计卡片</h2>
-              <img src="top-langs.svg" alt="Top Languages">
-              <h3>Markdown 使用方式</h3>
-              <pre>![Top Languages](https://sheyiyuan.github.io/github-readme-stats/top-langs.svg)</pre>
-              <h3>HTML 使用方式</h3>
-              <pre>&lt;img src="https://sheyiyuan.github.io/github-readme-stats/top-langs.svg" alt="Top Languages"&gt;</pre>
-            </div>
-            
-            <div class="card">
-              <h2>Half-Beat-Player 项目卡片</h2>
-              <img src="half-beat-player.svg" alt="Half Beat Player">
-              <h3>Markdown 使用方式</h3>
-              <pre>![Half Beat Player](https://sheyiyuan.github.io/github-readme-stats/half-beat-player.svg)</pre>
-              <h3>HTML 使用方式</h3>
-              <pre>&lt;img src="https://sheyiyuan.github.io/github-readme-stats/half-beat-player.svg" alt="Half Beat Player"&gt;</pre>
-            </div>
-            
-            <div class="card">
-              <h2>tuan-chat-web 项目卡片</h2>
-              <img src="tuan-chat-web.svg" alt="Tuan Chat Web">
-              <h3>Markdown 使用方式</h3>
-              <pre>![Tuan Chat Web](https://sheyiyuan.github.io/github-readme-stats/tuan-chat-web.svg)</pre>
-              <h3>HTML 使用方式</h3>
-              <pre>&lt;img src="https://sheyiyuan.github.io/github-readme-stats/tuan-chat-web.svg" alt="Tuan Chat Web"&gt;</pre>
-            </div>
+          CARDEOF
+          done
+          
+          # 生成 HTML 尾部
+          cat >> index.html << 'FOOTEREOF'
             
             <footer style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid #d0d7de; color: #656d76;">
               <p>由 GitHub Actions 自动生成和更新</p>
@@ -209,7 +202,7 @@ jobs:
             </footer>
           </body>
           </html>
-          HTMLEOF
+          FOOTEREOF
           
           # 替换时间戳
           sed -i "s/TIMESTAMP_PLACEHOLDER/$(date +'%Y-%m-%d %H:%M:%S') 北京时间/" index.html
