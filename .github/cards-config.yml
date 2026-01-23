@@ -107,7 +107,7 @@ cards:
       text_color: 666666
       icon_color: 3178C6
       show_owner: false
-      tech_stack: FastAPI,Python,Vue,TypeScript
+      tech_stack: FastAPI,Python,Vue
       description_lines_count: 3
 
 # Release 配置
