@@ -49,6 +49,9 @@
       fill: #3178C6;
       display: block;
     }
+    .icon path {
+      fill: #3178C6;
+    }
 
     .rank-circle-rim {
       stroke: #3178C6;
