@@ -1,6 +1,11 @@
 <div align="center">
   <h1>GitHub README 统计卡片</h1>
   <p>在你的 README 中展示动态生成的 GitHub 统计数据！支持自定义排名图标、透明背景、多语言等</p>
+  <img src="https://sheyiyuan.github.io/github-readme-stats/github-stats.svg" alt="GitHub Stats">
+  <p>自动生成和更新 | 由 GitHub Actions 驱动</p>
+  <p>
+    <a href="https://sheyiyuan.github.io/github-readme-stats/">在线预览</a>
+  </p>
 </div>
 
 ---
@@ -388,17 +393,15 @@ assets/rank-icons/
 - 自动化生成和部署流程
 - 支持透明背景和自定义颜色
 
+<div align="center">
+  <p>喜欢的话请点个 Star 吧！</p>
+  <img src="assets/docs/03.png" alt="Star me!" width="60">
+</div>
+
 ---
 
 ## 许可证
 
 本项目采用 MIT 许可证 - 详见 [LICENSE](LICENSE) 文件
 
----
-
-<div align="center">
-  <p>自动生成和更新 | 由 GitHub Actions 驱动</p>
-  <p>
-    <a href="https://sheyiyuan.github.io/github-readme-stats/">在线预览</a>
-  </p>
-</div>
+**注意**：项目中由 [@Sheyiyuan](https://github.com/Sheyiyuan) 添加的美术素材（包括但不限于图片、图标等）不适用 MIT 许可证。这些素材的版权归原作者所有，仅限于个人非商业用途使用。
