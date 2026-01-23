@@ -91,7 +91,7 @@ cards:
       text_color: 666666
       icon_color: 3178C6
       show_owner: false
-      tech_stack: Vue,TypeScript,Vite
+      tech_stack: Python
       description_lines_count: 3
 
   # ShyeriMeme 项目卡片（自定义版本，带技术栈）
@@ -107,7 +107,7 @@ cards:
       text_color: 666666
       icon_color: 3178C6
       show_owner: false
-      tech_stack: JavaScript,HTML,CSS
+      tech_stack: FastAPI,Python,Vue,TypeScript
       description_lines_count: 3
 
 # Release 配置
