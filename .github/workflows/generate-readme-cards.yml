@@ -97,12 +97,109 @@ jobs:
             kill $SERVER_PID 2>/dev/null || true
           fi
 
-      - name: Create Release with latest tag
+      - name: Deploy to GitHub Pages
         run: |
           # 设置时区为北京时间
           export TZ='Asia/Shanghai'
           
-          TIMESTAMP=$(date +'%Y%m%d-%H%M%S')
+          # 配置 Git
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # 创建或切换到 gh-pages 分支
+          git fetch origin gh-pages 2>/dev/null || true
+          if git rev-parse --verify origin/gh-pages >/dev/null 2>&1; then
+            git checkout gh-pages
+            git pull origin gh-pages
+          else
+            git checkout --orphan gh-pages
+            git rm -rf .
+          fi
+          
+          # 复制生成的卡片
+          cp -r cards/*.svg .
+          
+          # 创建 index.html 以便浏览
+          cat > index.html << 'HTMLEOF'
+          <!DOCTYPE html>
+          <html lang="zh-CN">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>GitHub README Cards</title>
+            <style>
+              body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; padding: 2rem; max-width: 1200px; margin: 0 auto; }
+              h1 { color: #24292f; }
+              .card { margin: 2rem 0; padding: 1rem; background: #f6f8fa; border-radius: 6px; }
+              img { display: block; margin: 1rem 0; }
+              code { background: #e3e8eb; padding: 2px 6px; border-radius: 3px; font-size: 0.9em; }
+              pre { background: #24292f; color: #fff; padding: 1rem; border-radius: 6px; overflow-x: auto; }
+            </style>
+          </head>
+          <body>
+            <h1>📊 GitHub README Cards</h1>
+            <p>自动生成的 GitHub 统计卡片，可直接在 README 中使用。</p>
+            
+            <div class="card">
+              <h2>GitHub 统计卡片</h2>
+              <img src="github-stats.svg" alt="GitHub Stats">
+              <h3>Markdown 使用方式</h3>
+              <pre>![GitHub Stats](https://sheyiyuan.github.io/github-readme-stats/github-stats.svg)</pre>
+              <h3>HTML 使用方式</h3>
+              <pre>&lt;img src="https://sheyiyuan.github.io/github-readme-stats/github-stats.svg" alt="GitHub Stats"&gt;</pre>
+            </div>
+            
+            <div class="card">
+              <h2>语言统计卡片</h2>
+              <img src="top-langs.svg" alt="Top Languages">
+              <h3>Markdown 使用方式</h3>
+              <pre>![Top Languages](https://sheyiyuan.github.io/github-readme-stats/top-langs.svg)</pre>
+              <h3>HTML 使用方式</h3>
+              <pre>&lt;img src="https://sheyiyuan.github.io/github-readme-stats/top-langs.svg" alt="Top Languages"&gt;</pre>
+            </div>
+            
+            <div class="card">
+              <h2>Half-Beat-Player 项目卡片</h2>
+              <img src="half-beat-player.svg" alt="Half Beat Player">
+              <h3>Markdown 使用方式</h3>
+              <pre>![Half Beat Player](https://sheyiyuan.github.io/github-readme-stats/half-beat-player.svg)</pre>
+              <h3>HTML 使用方式</h3>
+              <pre>&lt;img src="https://sheyiyuan.github.io/github-readme-stats/half-beat-player.svg" alt="Half Beat Player"&gt;</pre>
+            </div>
+            
+            <div class="card">
+              <h2>tuan-chat-web 项目卡片</h2>
+              <img src="tuan-chat-web.svg" alt="Tuan Chat Web">
+              <h3>Markdown 使用方式</h3>
+              <pre>![Tuan Chat Web](https://sheyiyuan.github.io/github-readme-stats/tuan-chat-web.svg)</pre>
+              <h3>HTML 使用方式</h3>
+              <pre>&lt;img src="https://sheyiyuan.github.io/github-readme-stats/tuan-chat-web.svg" alt="Tuan Chat Web"&gt;</pre>
+            </div>
+            
+            <footer style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid #d0d7de; color: #656d76;">
+              <p>🤖 由 GitHub Actions 自动生成和更新</p>
+              <p>更新时间: TIMESTAMP_PLACEHOLDER</p>
+            </footer>
+          </body>
+          </html>
+          HTMLEOF
+          
+          # 替换时间戳
+          sed -i "s/TIMESTAMP_PLACEHOLDER/$(date +'%Y-%m-%d %H:%M:%S') 北京时间/" index.html
+          
+          # 提交并推送
+          git add *.svg index.html
+          git commit -m "Update cards - $(date +'%Y-%m-%d %H:%M:%S')" || echo "No changes to commit"
+          git push origin gh-pages
+          
+          # 切换回 master 分支
+          git checkout master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Release Note
+        run: |
+          export TZ='Asia/Shanghai'
           TAG_NAME="cards-latest"
           RELEASE_NAME="README Cards - $(date +'%Y-%m-%d %H:%M:%S')"
           
@@ -110,31 +207,66 @@ jobs:
           gh release delete "$TAG_NAME" --yes 2>/dev/null || true
           git push --delete origin "$TAG_NAME" 2>/dev/null || true
           
-          # 创建新的 release
+          # 创建新的 release（不上传文件，只作为使用说明）
           gh release create "$TAG_NAME" \
             --title "$RELEASE_NAME" \
-            --notes "📊 自动生成的 GitHub README 卡片
+            --notes "📊 GitHub README 卡片使用说明
 
-          **生成时间**: $(date +'%Y-%m-%d %H:%M:%S') 北京时间
-          
-          **包含卡片**:
-          - GitHub 统计卡片 (github-stats.svg)
-          - 语言统计卡片 (top-langs.svg)
-          - Half-Beat-Player 项目卡片 (half-beat-player.svg)
-          - tuan-chat-web 项目卡片 (tuan-chat-web.svg)
-          
-          **使用方法**:
-          \`\`\`markdown
-          ![GitHub Stats](https://github.com/Sheyiyuan/github-readme-stats/releases/download/cards-latest/github-stats.svg)
-          ![Top Languages](https://github.com/Sheyiyuan/github-readme-stats/releases/download/cards-latest/top-langs.svg)
-          ![Half Beat Player](https://github.com/Sheyiyuan/github-readme-stats/releases/download/cards-latest/half-beat-player.svg)
-          ![Tuan Chat Web](https://github.com/Sheyiyuan/github-readme-stats/releases/download/cards-latest/tuan-chat-web.svg)
-          \`\`\`
-          
-          这些卡片使用自定义的 pin-custom API，支持技术栈徽章显示。
-          
-          🤖 由 GitHub Actions 自动生成" \
-            cards/*.svg
+**更新时间**: $(date +'%Y-%m-%d %H:%M:%S') 北京时间
+
+卡片已部署到 GitHub Pages，可通过以下方式使用：
+
+---
+
+## 📝 Markdown 格式
+
+\`\`\`markdown
+# GitHub 统计卡片
+![GitHub Stats](https://sheyiyuan.github.io/github-readme-stats/github-stats.svg)
+
+# 语言统计卡片
+![Top Languages](https://sheyiyuan.github.io/github-readme-stats/top-langs.svg)
+
+# Half-Beat-Player 项目卡片
+![Half Beat Player](https://sheyiyuan.github.io/github-readme-stats/half-beat-player.svg)
+
+# tuan-chat-web 项目卡片
+![Tuan Chat Web](https://sheyiyuan.github.io/github-readme-stats/tuan-chat-web.svg)
+\`\`\`
+
+---
+
+## 🌐 HTML 格式
+
+\`\`\`html
+<!-- GitHub 统计卡片 -->
+<img src=\"https://sheyiyuan.github.io/github-readme-stats/github-stats.svg\" alt=\"GitHub Stats\">
+
+<!-- 语言统计卡片 -->
+<img src=\"https://sheyiyuan.github.io/github-readme-stats/top-langs.svg\" alt=\"Top Languages\">
+
+<!-- Half-Beat-Player 项目卡片 -->
+<img src=\"https://sheyiyuan.github.io/github-readme-stats/half-beat-player.svg\" alt=\"Half Beat Player\">
+
+<!-- tuan-chat-web 项目卡片 -->
+<img src=\"https://sheyiyuan.github.io/github-readme-stats/tuan-chat-web.svg\" alt=\"Tuan Chat Web\">
+\`\`\`
+
+---
+
+## 🔗 在线预览
+
+访问 [https://sheyiyuan.github.io/github-readme-stats/](https://sheyiyuan.github.io/github-readme-stats/) 查看所有卡片。
+
+## ✨ 特性
+
+- ✅ 通过 GitHub Pages 托管，免费且稳定
+- ✅ 全球 CDN 加速访问
+- ✅ 每日自动更新（北京时间 00:00）
+- ✅ 自定义技术栈徽章显示
+- ✅ 支持 Markdown 和 HTML 两种引用方式
+
+🤖 由 GitHub Actions 自动生成"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -146,32 +278,28 @@ jobs:
           
           echo "## 📊 GitHub README Cards Generation" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          
-          if [ "${{ steps.changes.outputs.has_changes }}" == "true" ]; then
-            echo "✅ **状态**: 成功生成并更新卡片" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "### 已更新的卡片" >> $GITHUB_STEP_SUMMARY
-            echo "- GitHub 统计卡片" >> $GITHUB_STEP_SUMMARY
-            echo "- 语言统计卡片" >> $GITHUB_STEP_SUMMARY
-            echo "- Half-Beat-Player 项目卡片 (带技术栈)" >> $GITHUB_STEP_SUMMARY
-            echo "- tuan-chat-web 项目卡片 (带技术栈)" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "ℹ️ **状态**: 无更新，卡片内容未变化" >> $GITHUB_STEP_SUMMARY
-          fi
-          
-          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ **状态**: 卡片已生成并部署到 GitHub Pages" >> $GITHUB_STEP_SUMMARY
           echo "⏰ **执行时间**: $(date +'%Y-%m-%d %H:%M:%S') 北京时间" >> $GITHUB_STEP_SUMMARY
-          echo "✅ **状态**: 卡片已生成并发布到 Release" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### 生成的卡片" >> $GITHUB_STEP_SUMMARY
+          
+          echo "### 📦 生成的卡片" >> $GITHUB_STEP_SUMMARY
           echo "- GitHub 统计卡片" >> $GITHUB_STEP_SUMMARY
           echo "- 语言统计卡片" >> $GITHUB_STEP_SUMMARY
           echo "- Half-Beat-Player 项目卡片 (带技术栈)" >> $GITHUB_STEP_SUMMARY
           echo "- tuan-chat-web 项目卡片 (带技术栈)" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### 使用方法" >> $GITHUB_STEP_SUMMARY
-          echo "在 Sheyiyuan/Sheyiyuan README 中使用以下 URL:" >> $GITHUB_STEP_SUMMARY
+          
+          echo "### 🔗 使用方法" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Markdown 格式：**" >> $GITHUB_STEP_SUMMARY
           echo '```markdown' >> $GITHUB_STEP_SUMMARY
-          echo "![Stats](https://github.com/Sheyiyuan/github-readme-stats/releases/download/cards-latest/github-stats.svg)" >> $GITHUB_STEP_SUMMARY
-          echo "![Langs](https://github.com/Sheyiyuan/github-readme-stats/releases/download/cards-latest/top-langs.svg)" >> $GITHUB_STEP_SUMMARY
+          echo "![GitHub Stats](https://sheyiyuan.github.io/github-readme-stats/github-stats.svg)" >> $GITHUB_STEP_SUMMARY
+          echo "![Top Languages](https://sheyiyuan.github.io/github-readme-stats/top-langs.svg)" >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**HTML 格式：**" >> $GITHUB_STEP_SUMMARY
+          echo '```html' >> $GITHUB_STEP_SUMMARY
+          echo '<img src="https://sheyiyuan.github.io/github-readme-stats/github-stats.svg" alt="GitHub Stats">' >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "🌐 [查看所有卡片](https://sheyiyuan.github.io/github-readme-stats/)" >> $GITHUB_STEP_SUMMARY
