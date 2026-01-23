@@ -99,6 +99,9 @@ jobs:
 
       - name: Create Release with latest tag
         run: |
+          # 设置时区为北京时间
+          export TZ='Asia/Shanghai'
+          
           TIMESTAMP=$(date +'%Y%m%d-%H%M%S')
           TAG_NAME="cards-latest"
           RELEASE_NAME="README Cards - $(date +'%Y-%m-%d %H:%M:%S')"
@@ -112,7 +115,7 @@ jobs:
             --title "$RELEASE_NAME" \
             --notes "📊 自动生成的 GitHub README 卡片
 
-          **生成时间**: $(date +'%Y-%m-%d %H:%M:%S %Z')
+          **生成时间**: $(date +'%Y-%m-%d %H:%M:%S') 北京时间
           
           **包含卡片**:
           - GitHub 统计卡片 (github-stats.svg)
