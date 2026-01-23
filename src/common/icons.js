@@ -1,4 +1,73 @@
 // @ts-check
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+/**
+ * Load rank icon from assets folder
+ *
+ * @param {string} style - The icon style folder name
+ * @param {string} level - The rank level (S, A+, A, etc.)
+ * @returns {string|null} - The icon content or null if not found
+ */
+const loadRankIconFromFile = (style, level) => {
+  const extensions = [".svg", ".png", ".jpg", ".jpeg", ".webp"];
+  const assetsDir = path.join(__dirname, "../../assets/rank-icons", style);
+
+  for (const ext of extensions) {
+    const iconPath = path.join(assetsDir, `${level}${ext}`);
+
+    if (fs.existsSync(iconPath)) {
+      const content = fs.readFileSync(iconPath);
+
+      // SVG 文件直接嵌入内容
+      if (ext === ".svg") {
+        let svgContent = content.toString("utf8");
+        // 移除 XML 声明和 DOCTYPE
+        svgContent = svgContent
+          .replace(/<\?xml[^?]*\?>/g, "")
+          .replace(/<!DOCTYPE[^>]*>/g, "")
+          .trim();
+
+        // 如果是完整的 SVG 标签，提取内容或添加必要的位置属性
+        if (svgContent.startsWith("<svg")) {
+          // 为 SVG 添加默认的位置和尺寸属性（如果没有的话）
+          if (!svgContent.includes(" x=")) {
+            svgContent = svgContent.replace(
+              "<svg",
+              '<svg x="-30" y="-30" width="60" height="60"',
+            );
+          }
+        }
+
+        return svgContent;
+      }
+
+      // 位图格式使用 base64 嵌入
+      const base64 = content.toString("base64");
+      const mimeTypes = {
+        ".png": "image/png",
+        ".jpg": "image/jpeg",
+        ".jpeg": "image/jpeg",
+        ".webp": "image/webp",
+      };
+      const mimeType = mimeTypes[ext];
+
+      return `
+        <image 
+          href="data:${mimeType};base64,${base64}" 
+          x="-30" y="-30" 
+          width="60" height="60"
+        />
+      `;
+    }
+  }
+
+  return null;
+};
 
 const icons = {
   star: `<path fill-rule="evenodd" d="M8 .25a.75.75 0 01.673.418l1.882 3.815 4.21.612a.75.75 0 01.416 1.279l-3.046 2.97.719 4.192a.75.75 0 01-1.088.791L8 12.347l-3.766 1.98a.75.75 0 01-1.088-.79l.72-4.194L.818 6.374a.75.75 0 01.416-1.28l4.21-.611L7.327.668A.75.75 0 018 .25zm0 2.445L6.615 5.5a.75.75 0 01-.564.41l-3.097.45 2.24 2.184a.75.75 0 01.216.664l-.528 3.084 2.769-1.456a.75.75 0 01.698 0l2.77 1.456-.53-3.084a.75.75 0 01.216-.664l2.24-2.183-3.096-.45a.75.75 0 01-.564-.41L8 2.694v.001z"/>`,
@@ -25,6 +94,30 @@ const icons = {
  * @returns {string} - The SVG code of the rank icon
  */
 const rankIcon = (rankIcon, rankLevel, percentile) => {
+  // 检查是否使用 global/xx 格式（全局统一图标）
+  if (rankIcon && rankIcon.startsWith("global/")) {
+    const iconName = rankIcon.substring(7); // 移除 'global/' 前缀
+    const fileIcon = loadRankIconFromFile("global", iconName);
+    if (fileIcon) {
+      return fileIcon;
+    }
+    console.warn(
+      `Global icon file not found: "${iconName}", falling back to default`,
+    );
+  }
+
+  // 如果不是内置类型，尝试从文件加载（按等级）
+  if (rankIcon && !["github", "percentile", "default"].includes(rankIcon)) {
+    const fileIcon = loadRankIconFromFile(rankIcon, rankLevel);
+    if (fileIcon) {
+      return fileIcon;
+    }
+    // 如果文件不存在，回退到 default
+    console.warn(
+      `Rank icon file not found for style "${rankIcon}" and level "${rankLevel}", falling back to default`,
+    );
+  }
+
   switch (rankIcon) {
     case "github":
       return `
@@ -51,5 +144,5 @@ const rankIcon = (rankIcon, rankLevel, percentile) => {
   }
 };
 
-export { icons, rankIcon };
+export { icons, rankIcon, loadRankIconFromFile };
 export default icons;

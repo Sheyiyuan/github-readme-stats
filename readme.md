@@ -1,18 +1,13 @@
 <div align="center">
   <h1>GitHub README 统计卡片</h1>
-  <p>在你的 README 中展示动态生成的 GitHub 统计数据！</p>
+  <p>在你的 README 中展示动态生成的 GitHub 统计数据！支持自定义排名图标、透明背景、多语言等</p>
 </div>
-
-<p align="center">
-  <a href="#所有示例">查看示例</a>
-  ·
-  <a href="https://sheyiyuan.github.io/github-readme-stats/">在线预览</a>
-</p>
 
 ---
 
 ## 目录
 
+- [目录](#目录)
 - [快速开始](#快速开始)
   - [步骤 1：Fork 本仓库](#步骤-1fork-本仓库)
   - [步骤 2：配置 GitHub Token](#步骤-2配置-github-token)
@@ -25,6 +20,7 @@
   - [显示图标](#显示图标)
   - [自定义主题](#自定义主题)
   - [自定义选项](#自定义选项)
+    - [排名图标风格](#排名图标风格)
 - [自定义仓库卡片（带技术栈）](#自定义仓库卡片带技术栈)
   - [功能特性](#功能特性)
   - [使用方法](#使用方法)
@@ -150,17 +146,65 @@ http://localhost:9000/api?username=你的用户名
 
 ### 自定义选项
 
-| 参数          | 说明             | 默认值   |
-| ------------- | ---------------- | -------- |
-| `hide`        | 隐藏特定统计数据 | -        |
-| `show_icons`  | 显示图标         | `false`  |
-| `hide_border` | 隐藏边框         | `false`  |
-| `hide_rank`   | 隐藏排名         | `false`  |
-| `locale`      | 语言设置         | `en`     |
-| `bg_color`    | 背景颜色         | `FFFEFE` |
-| `title_color` | 标题颜色         | `2F80ED` |
-| `text_color`  | 文本颜色         | `434D58` |
-| `icon_color`  | 图标颜色         | `4C71F2` |
+| 参数          | 说明             | 默认值    | 可选值                                              |
+| ------------- | ---------------- | --------- | --------------------------------------------------- |
+| `hide`        | 隐藏特定统计数据 | -         | `stars,commits,prs,issues,contribs`                 |
+| `show_icons`  | 显示图标         | `false`   | `true`, `false`                                     |
+| `hide_border` | 隐藏边框         | `false`   | `true`, `false`                                     |
+| `hide_rank`   | 隐藏排名         | `false`   | `true`, `false`                                     |
+| `rank_icon`   | 排名图标风格     | `default` | `default`, `github`, `percentile`, `star`, 或自定义 |
+| `locale`      | 语言设置         | `en`      | `cn`, `en`, `ja`, `es` 等                           |
+| `bg_color`    | 背景颜色         | `FFFEFE`  | 16进制颜色（无 `#`）                                |
+| `title_color` | 标题颜色         | `2F80ED`  | 16进制颜色（无 `#`）                                |
+| `text_color`  | 文本颜色         | `434D58`  | 16进制颜色（无 `#`）                                |
+| `icon_color`  | 图标颜色         | `4C71F2`  | 16进制颜色（无 `#`）                                |
+
+#### 排名图标风格
+
+**内置风格：**
+- `default` - 显示字母等级（S、A、B、C）
+- `github` - GitHub 徽标
+- `percentile` - 百分位数显示（Top X%）
+- `star` - 彩色星星（按等级显示不同颜色）
+
+**自定义按等级图标：**
+
+在 `assets/rank-icons/` 目录下创建新文件夹，并为每个等级添加不同的图标：
+
+```bash
+assets/rank-icons/
+  your-style/
+    S.svg     # 或 .png, .jpg, .webp
+    A+.svg
+    A.svg
+    # ... 共 9 个等级
+```
+
+使用方法：
+```
+?rank_icon=your-style
+```
+
+**全局统一图标（所有等级使用同一图标）：**
+
+使用 `global/` 前缀，所有等级将显示相同的图标：
+
+```bash
+assets/rank-icons/
+  global/
+    default.png   # 默认图标
+    fire.svg      # 火焰图标
+    trophy.svg    # 奖杯图标
+    # 添加你自己的图标...
+```
+
+使用方法：
+```
+?rank_icon=global/default   # 所有等级都显示默认图标
+?rank_icon=global/fire      # 所有等级都显示火焰
+```
+
+详见 [assets/rank-icons/README.md](assets/rank-icons/README.md)
 
 ---
 
