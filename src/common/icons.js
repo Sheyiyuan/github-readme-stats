@@ -35,10 +35,11 @@ const loadRankIconFromFile = (style, level) => {
         // 如果是完整的 SVG 标签，提取内容或添加必要的位置属性
         if (svgContent.startsWith("<svg")) {
           // 为 SVG 添加默认的位置和尺寸属性（如果没有的话）
+          // 圆心在 (-10, 8)，60x60 的图标居中应该是 x=-40, y=-22
           if (!svgContent.includes(" x=")) {
             svgContent = svgContent.replace(
               "<svg",
-              '<svg x="-30" y="-30" width="60" height="60"',
+              '<svg x="-40" y="-22" width="60" height="60"',
             );
           }
         }
@@ -56,10 +57,11 @@ const loadRankIconFromFile = (style, level) => {
       };
       const mimeType = mimeTypes[ext];
 
+      // 圆心在 (-10, 8)，60x60 的图标居中应该是 x=-40, y=-22
       return `
         <image 
           href="data:${mimeType};base64,${base64}" 
-          x="-30" y="-30" 
+          x="-40" y="-22" 
           width="60" height="60"
         />
       `;
