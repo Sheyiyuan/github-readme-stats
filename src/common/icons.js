@@ -61,7 +61,7 @@ const loadRankIconFromFile = (style, level) => {
       return `
         <image 
           href="data:${mimeType};base64,${base64}" 
-          x="-40" y="-22" 
+          x="-45" y="-22" 
           width="60" height="60"
         />
       `;
