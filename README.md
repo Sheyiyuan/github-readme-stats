@@ -227,15 +227,12 @@ assets/rank-icons/
 assets/rank-icons/
   global/
     default.png   # 默认图标
-    fire.svg      # 火焰图标
-    trophy.svg    # 奖杯图标
     # 添加你自己的图标...
 ```
 
 使用方法：
 ```
 ?rank_icon=global/default   # 所有等级都显示默认图标
-?rank_icon=global/fire      # 所有等级都显示火焰
 ```
 
 详见 [assets/rank-icons/README.md](assets/rank-icons/README.md)
@@ -420,7 +417,6 @@ assets/rank-icons/
 - 添加自定义仓库卡片（支持技术栈徽章）
 - 改用 GitHub Pages 部署，无需 Vercel
 - 自动化生成和部署流程
-- 支持透明背景和自定义颜色
 
 <div align="center">
   <p>喜欢的话请点个 Star 吧！</p>
