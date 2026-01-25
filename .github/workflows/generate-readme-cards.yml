@@ -2,16 +2,23 @@ name: Generate README Cards
 
 on:
   schedule:
-    - cron: '0 16 * * *'  # 每天北京时间 00:00 (UTC+8)
+    - cron: '30 0,8,16 * * *'  # 每天北京时间 08:30, 16:30, 00:30 (UTC+8)
   workflow_dispatch:  # 支持手动触发
+    inputs:
+      debug_enabled:
+        type: boolean
+        description: 'Run with debug logging'
+        required: false
+        default: false
   push:
     branches:
       - master
     paths:
       - 'src/**'
       - 'api/**'
-      - '.github/workflows/generate-readme-cards.yml'
-      - '.github/cards-config.yml'
+      - 'themes/**'
+      - '.github/**'
+      - 'package.json'
 
 permissions:
   contents: write
@@ -32,9 +39,18 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-          cache: 'pnpm'
+
+      - name: Cache dependencies
+        id: cache-deps
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
 
       - name: Install dependencies
+        if: steps.cache-deps.outputs.cache-hit != 'true'
         run: pnpm install --frozen-lockfile
 
       - name: Load configuration
