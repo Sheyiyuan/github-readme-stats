@@ -1,5 +1,8 @@
 <div align="center">
   <h1>GitHub README 统计卡片</h1>
+  <p>
+    Forked from <a href="https://github.com/anuraghazra/github-readme-stats">anuraghazra/github-readme-stats</a>
+  </p>
   <p>在你的 README 中展示动态生成的 GitHub 统计数据！支持自定义排名图标、透明背景、多语言等</p>
   <img src="https://sheyiyuan.github.io/github-readme-stats/github-stats.svg" alt="GitHub Stats">
   <p>自动生成和更新 | 由 GitHub Actions 驱动</p>
