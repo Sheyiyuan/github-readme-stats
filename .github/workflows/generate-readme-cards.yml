@@ -200,15 +200,20 @@ jobs:
             # 生成卡片标题（美化名称）
             DISPLAY_NAME=$(echo "$NAME" | sed 's/-/ /g' | sed 's/\b\(.\)/\u\1/g')
             
+            # 获取当前仓库信息
+            REPO_NAME="${GITHUB_REPOSITORY#*/}"
+            OWNER_NAME="${GITHUB_REPOSITORY_OWNER}"
+            PAGES_URL="https://${OWNER_NAME}.github.io/${REPO_NAME}"
+            
             cat >> index.html << CARDEOF
             
             <div class="card">
               <h2>${DISPLAY_NAME}</h2>
               <img src="${FILENAME}" alt="${DISPLAY_NAME}">
               <h3>Markdown 使用方式</h3>
-              <pre>![${DISPLAY_NAME}](https://sheyiyuan.github.io/github-readme-stats/${FILENAME})</pre>
+              <pre>![${DISPLAY_NAME}](${PAGES_URL}/${FILENAME})</pre>
               <h3>HTML 使用方式</h3>
-              <pre>&lt;img src="https://sheyiyuan.github.io/github-readme-stats/${FILENAME}" alt="${DISPLAY_NAME}"&gt;</pre>
+              <pre>&lt;img src="${PAGES_URL}/${FILENAME}" alt="${DISPLAY_NAME}"&gt;</pre>
             </div>
           CARDEOF
           done
@@ -243,6 +248,11 @@ jobs:
           # 设置时区为北京时间
           export TZ='Asia/Shanghai'
           
+          # 重新计算 URL
+          REPO_NAME="${GITHUB_REPOSITORY#*/}"
+          OWNER_NAME="${GITHUB_REPOSITORY_OWNER}"
+          PAGES_URL="https://${OWNER_NAME}.github.io/${REPO_NAME}"
+          
           echo "## 📊 GitHub README Cards Generation" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "✅ **状态**: 卡片已生成并部署到 GitHub Pages" >> $GITHUB_STEP_SUMMARY
@@ -260,13 +270,13 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Markdown 格式：**" >> $GITHUB_STEP_SUMMARY
           echo '```markdown' >> $GITHUB_STEP_SUMMARY
-          echo "![GitHub Stats](https://sheyiyuan.github.io/github-readme-stats/github-stats.svg)" >> $GITHUB_STEP_SUMMARY
-          echo "![Top Languages](https://sheyiyuan.github.io/github-readme-stats/top-langs.svg)" >> $GITHUB_STEP_SUMMARY
+          echo "![GitHub Stats](${PAGES_URL}/github-stats.svg)" >> $GITHUB_STEP_SUMMARY
+          echo "![Top Languages](${PAGES_URL}/top-langs.svg)" >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**HTML 格式：**" >> $GITHUB_STEP_SUMMARY
           echo '```html' >> $GITHUB_STEP_SUMMARY
-          echo '<img src="https://sheyiyuan.github.io/github-readme-stats/github-stats.svg" alt="GitHub Stats">' >> $GITHUB_STEP_SUMMARY
+          echo "<img src=\"${PAGES_URL}/github-stats.svg\" alt=\"GitHub Stats\">" >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "🌐 [查看所有卡片](https://sheyiyuan.github.io/github-readme-stats/)" >> $GITHUB_STEP_SUMMARY
+          echo "🌐 [查看所有卡片](${PAGES_URL}/)" >> $GITHUB_STEP_SUMMARY

@@ -83,6 +83,32 @@
 3. 点击 `Run workflow`
 4. 等待执行完成后，访问 `https://你的用户名.github.io/github-readme-stats/` 查看效果
 
+> **⚠️ 注意：关于 Fork 仓库的定时任务**
+> 
+> 由于 GitHub 的机制限制，**Fork 的仓库默认不会触发定时任务**。如果你发现卡片数据不更新，请使用以下任意一种方案解决：
+>
+> #### 方案一：转为独立仓库（最简单）
+> 直接切断 Fork 关系，让它变成你自己的独立项目。
+> 1. 将代码 pull 到本地备份。
+> 2. 在 GitHub 上**删除**当前的 Fork 仓库。
+> 3. **新建**一个同名空仓库（不要勾选 Fork）。
+> 4. 将本地代码 push 到这个新仓库。
+>
+> #### 方案二：双仓库模式（完美共存）
+> 如果你想保留 Fork 关系（方便给原作者提 PR），同时又想让定时任务自动运行：
+> 1. 在 GitHub 新建一个**不同名**的空仓库（例如 `stats-card-runner`），不要 Fork。
+> 2. 在该新仓库的 Settings 中同样配置 `GH_PAT` 密钥。
+> 3. 在本地通过命令添加第二个远程仓库：
+>    ```bash
+>    git remote add runner git@github.com:你的用户名/stats-card-runner.git
+>    ```
+> 4. 以后更新代码时，同时推送到两个仓库：
+>    ```bash
+>    git push origin master  # 推送到 Fork 仓库（用于保存代码/提PR）
+>    git push runner master  # 推送到运行仓库（用于触发定时任务）
+>    ```
+> 5. **重要**：引用图片时，请使用**运行仓库** (runner) 的 GitHub Pages 链接。
+
 ### 本地测试（可选）
 
 ```bash
