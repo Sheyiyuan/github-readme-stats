@@ -14,4 +14,4 @@ test-output/
 !.vscode/settings.json
 *.code-workspace
 
-.vercel
+**/.DS_Store
