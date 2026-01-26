@@ -1,10 +1,10 @@
 # CI/CD 自动化说明
 
-## 📋 概述
+## 概述
 
-本项目使用 GitHub Actions 自动生成并更新 README 卡片到 [Sheyiyuan/Sheyiyuan](https://github.com/Sheyiyuan/Sheyiyuan) 仓库。
+本项目使用 GitHub Actions 自动生成并更新 README 卡片，并部署到 GitHub Pages。
 
-## 🎯 工作流程
+## 工作流程
 
 ### 触发条件
 
@@ -14,59 +14,39 @@
 
 ### 生成的卡片
 
-1. **GitHub Stats** (`github-stats.svg`)
-   - 显示用户的 GitHub 统计数据
-   - 包含 stars、commits、PRs 等
+所有卡片配置在 [`.github/cards-config.yml`](.github/cards-config.yml) 中定义，当前包括：
 
-2. **Top Languages** (`top-langs.svg`)
-   - 显示最常用的编程语言
-   - 紧凑布局，最多6种语言
+- GitHub Stats (github-stats.svg) - GitHub 统计数据
+- Top Languages (top-langs.svg) - 常用编程语言
+- Half-Beat-Player (half-beat-player.svg) - 项目卡片，带技术栈徽章
+- tuan-chat-web (tuan-chat-web.svg) - 项目卡片，带技术栈徽章
+- Anan-s-Sketchbook-Chat-Box (anan-s-sketchbook-chat-box.svg) - 项目卡片
+- ShyeriMeme (shyerimeme.svg) - 项目卡片
 
-3. **Half-Beat-Player** (`half-beat-player.svg`)
-   - 项目仓库卡片
-   - **带技术栈徽章**: Wails, Go, Vue, TypeScript
-
-4. **tuan-chat-web** (`tuan-chat-web.svg`)
-   - 项目仓库卡片
-   - **带技术栈徽章**: React, TypeScript, Vite
-
-## ⚙️ 配置要求
+## 配置要求
 
 ### GitHub Secrets
 
-在 **Sheyiyuan/Sheyiyuan** 仓库设置以下 secrets：
+需要在本仓库设置以下密钥：
 
 | Secret 名称 | 说明                         | 获取方式                                           |
 | ----------- | ---------------------------- | -------------------------------------------------- |
 | `GH_PAT`    | GitHub Personal Access Token | [创建 PAT](https://github.com/settings/tokens/new) |
 
-**PAT 权限要求**:
-- `repo` (完整权限) - 访问仓库
-- `workflow` - 触发 workflows
+PAT 权限要求：
+- `public_repo` - 读取公开仓库
+- `read:user` - 读取用户信息
 
-### 目录结构
+### 配置文件结构
 
-Sheyiyuan 仓库需要包含以下目录：
-
-```
-Sheyiyuan/
-├── assets/
-│   └── cards/
-│       ├── github-stats.svg
-│       ├── top-langs.svg
-│       ├── half-beat-player.svg
-│       └── tuan-chat-web.svg
-└── README.md
-```
-
-## 🔧 配置文件
-
-### `.github/cards-config.yml`
-
-定义所有卡片的生成参数：
+`.github/cards-config.yml` - 定义所有卡片的生成参数：
 
 ```yaml
-# 卡片配置示例
+# 服务器配置
+server:
+  base_url: http://localhost:9000
+
+# 卡片配置
 cards:
   - name: github-stats
     filename: github-stats.svg
@@ -77,54 +57,62 @@ cards:
       theme: transparent
 ```
 
-完整配置参见 [`.github/cards-config.yml`](.github/cards-config.yml)
+`.github/workflows/generate-readme-cards.yml` - GitHub Actions 工作流：
+- 启动本地 API 服务器
+- 生成所有配置的卡片
+- 部署到 GitHub Pages
 
-### Workflow 文件
+## 使用方法
 
-- **位置**: `.github/workflows/generate-readme-cards.yml`
-- **功能**: 
-  - 启动本地 API 服务器
-  - 生成所有配置的卡片
-  - 检测变更并提交
-  - 创建 Release 保存历史
+### 手动触发
 
-## 🚀 使用方法
+1. 进入 Actions 页面
+2. 选择 "Generate README Cards" workflow
+3. 点击 "Run workflow"
+4. 等待执行完成
 
-### 1. 手动触发
+### 查看结果
 
-进入 Actions 页面 → 选择 "Generate README Cards" → 点击 "Run workflow"
-
-### 2. 查看执行结果
-
+- 访问 `https://sheyiyuan.github.io/github-readme-stats/` 查看所有卡片
 - 在 Actions 标签页查看运行日志
-- 检查 Sheyiyuan 仓库的 assets/cards/ 目录
-- 查看 Releases 页面的历史版本
+- 检查执行摘要了解生成详情
 
-### 3. 在 README 中使用
+### 在 README 中使用
 
 ```markdown
-<!-- 使用本地文件 -->
-![GitHub Stats](assets/cards/github-stats.svg)
-![Top Languages](assets/cards/top-langs.svg)
+<!-- 使用 GitHub Pages 链接 -->
+![GitHub Stats](https://sheyiyuan.github.io/github-readme-stats/github-stats.svg)
+![Top Languages](https://sheyiyuan.github.io/github-readme-stats/top-langs.svg)
 
-<!-- 或使用表格布局 -->
+<!-- 使用表格布局 -->
 <table>
   <tr>
-    <td><img src="assets/cards/github-stats.svg" /></td>
-    <td><img src="assets/cards/top-langs.svg" /></td>
+    <td><img src="https://sheyiyuan.github.io/github-readme-stats/github-stats.svg" /></td>
+    <td><img src="https://sheyiyuan.github.io/github-readme-stats/top-langs.svg" /></td>
   </tr>
   <tr>
-    <td><img src="assets/cards/half-beat-player.svg" /></td>
-    <td><img src="assets/cards/tuan-chat-web.svg" /></td>
+    <td><img src="https://sheyiyuan.github.io/github-readme-stats/half-beat-player.svg" /></td>
+    <td><img src="https://sheyiyuan.github.io/github-readme-stats/tuan-chat-web.svg" /></td>
   </tr>
 </table>
 ```
 
-## 📝 自定义配置
+## 自定义配置
 
 ### 修改卡片参数
 
-编辑 `.github/cards-config.yml`，然后提交变更。工作流会自动使用新配置。
+编辑 `.github/cards-config.yml`，修改现有卡片的参数：
+
+```yaml
+cards:
+  - name: github-stats
+    params:
+      username: YourUsername  # 修改用户名
+      title_color: FF6B6B    # 修改标题颜色
+      text_color: 4A5568     # 修改文字颜色
+```
+
+提交变更后，工作流会自动使用新配置生成卡片。
 
 ### 添加新卡片
 
@@ -132,13 +120,14 @@ cards:
 
 ```yaml
 cards:
-  - name: my-new-card
-    filename: my-new-card.svg
+  - name: my-repo
+    filename: my-repo.svg
     endpoint: /api/pin-custom/
     params:
       username: YourUsername
       repo: YourRepo
-      tech_stack: Tech1,Tech2,Tech3
+      tech_stack: React,TypeScript,Node.js
+      theme: transparent
 ```
 
 ### 调整定时任务
@@ -151,70 +140,69 @@ on:
     - cron: '0 8 * * *'  # 改为北京时间 16:00 (UTC 8:00)
 ```
 
-## 🔍 故障排查
+> 注意：定时任务使用 UTC 时间，需要根据时区进行换算。
+
+## 故障排查
 
 ### 常见问题
 
-1. **卡片生成失败**
-   - 检查 GH_PAT 是否配置正确
-   - 查看 Actions 日志中的错误信息
-   - 确认 API 服务器是否正常启动
+**1. 卡片生成失败**
+- 检查 GH_PAT 是否配置正确
+- 查看 Actions 日志中的错误信息
+- 确认 API 服务器是否正常启动
 
-2. **卡片内容未更新**
-   - GitHub API 可能返回相同数据
-   - 工作流会自动跳过无变更的提交
+**2. 卡片内容未更新**
+- GitHub API 可能返回缓存数据
+- 工作流会自动跳过无变更的提交
+- 可以手动触发强制更新
 
-3. **权限错误**
-   - 确保 PAT 包含 `repo` 和 `workflow` 权限
-   - 检查目标仓库是否可访问
+**3. 权限错误**
+- 确保 PAT 包含 `public_repo` 和 `read:user` 权限
+- 检查 token 是否过期
 
-### 查看详细日志
+**4. 定时任务未执行**
+- Fork 的仓库默认禁用定时任务
+- 需要转为独立仓库或手动启用（参见 README 中的说明）
 
-进入 Actions → 选择失败的运行 → 展开各个步骤查看输出
+### 查看日志
 
-## 📊 Release 说明
+进入 Actions → 选择运行记录 → 展开各步骤查看详细输出
 
-每次成功更新卡片后，会自动创建一个 Release：
-
-- **标签格式**: `cards-YYYYMMDD-HHMMSS`
-- **标题**: `README Cards - YYYYMMDD-HHMMSS`
-- **附件**: 所有生成的 SVG 文件
-
-这允许你追踪卡片的历史变化，或者回滚到之前的版本。
-
-## 🛠️ 技术细节
+## 技术细节
 
 ### 工作流程
 
-1. Checkout 两个仓库（stats-repo 和 target-repo）
-2. 安装 Node.js 和 pnpm
-3. 安装依赖
-4. 启动 Express API 服务器
-5. 调用 API 生成 SVG 文件
-6. 检测变更
-7. 提交到目标仓库
-8. 创建 Release（如有变更）
-9. 生成执行摘要
+1. Checkout 仓库代码
+2. 安装 Node.js (v22) 和 pnpm (v9)
+3. 安装项目依赖
+4. 读取 cards-config.yml 配置
+5. 启动 Express API 服务器（端口 9000）
+6. 循环生成所有配置的卡片
+7. 部署到 gh-pages 分支
+8. 生成索引页面（index.html）
+9. 输出执行摘要
 
-### 使用的 API
+### 使用的 API 端点
 
-- `/api` - GitHub Stats
-- `/api/top-langs/` - Top Languages
-- `/api/pin-custom/` - **自定义项目卡片**（支持技术栈徽章）
+- `/api` - GitHub 用户统计信息
+- `/api/top-langs/` - 常用编程语言统计
+- `/api/pin-custom/` - 自定义项目卡片（支持技术栈徽章）
 
 ### 特色功能
 
-- **智能缓存**: 仅在内容变化时更新
-- **增量提交**: 使用 `[skip ci]` 避免循环触发
-- **详细摘要**: 在 Actions 页面显示执行结果
-- **历史追踪**: Release 保存每次更新的版本
+- 智能缓存：仅在内容变化时更新
+- 自动索引：生成展示所有卡片的网页
+- 详细摘要：在 Actions 页面显示执行结果
+- 透明背景：卡片支持透明背景适配不同主题
 
-## 📚 相关链接
+## 相关链接
 
-- [GitHub README Stats](https://github.com/anuraghazra/github-readme-stats)
+- [GitHub README Stats 原项目](https://github.com/anuraghazra/github-readme-stats)
 - [GitHub Actions 文档](https://docs.github.com/en/actions)
-- [创建 PAT](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens)
+- [创建 Personal Access Token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens)
+- [在线预览](https://sheyiyuan.github.io/github-readme-stats/)
 
-## 📄 许可证
+## 许可证
 
-本 CI/CD 配置基于 [GitHub README Stats](https://github.com/anuraghazra/github-readme-stats) 项目，遵循 MIT 许可证。
+基于 [GitHub README Stats](https://github.com/anuraghazra/github-readme-stats) 项目，遵循 MIT 许可证。
+
