@@ -172,7 +172,7 @@
           y="0"
           width="12.05"
           height="8"
-          fill="#ff5a03"
+          fill="#000080"
         />
       
         <rect
@@ -182,7 +182,7 @@
           y="0"
           width="12.05"
           height="8"
-          fill="#ff3e00"
+          fill="#199f4b"
         />
       
         <rect
@@ -192,7 +192,7 @@
           y="0"
           width="12.05"
           height="8"
-          fill="#ff6347"
+          fill="#ff5a03"
         />
       
         <rect
@@ -202,7 +202,7 @@
           y="0"
           width="12.05"
           height="8"
-          fill="#fcb32c"
+          fill="#ff3e00"
         />
       
       
@@ -237,30 +237,30 @@
     </g>
   </g></g><g transform="translate(150, 0)"><g transform="translate(0, 0)">
     <g class="stagger" style="animation-delay: 450ms">
+      <circle cx="5" cy="6" r="5" fill="#000080" />
+      <text data-testid="lang-name" x="15" y="10" class='lang-name'>
+        Lua 0.82%
+      </text>
+    </g>
+  </g><g transform="translate(0, 25)">
+    <g class="stagger" style="animation-delay: 600ms">
+      <circle cx="5" cy="6" r="5" fill="#199f4b" />
+      <text data-testid="lang-name" x="15" y="10" class='lang-name'>
+        Vim Script 0.82%
+      </text>
+    </g>
+  </g><g transform="translate(0, 50)">
+    <g class="stagger" style="animation-delay: 750ms">
       <circle cx="5" cy="6" r="5" fill="#ff5a03" />
       <text data-testid="lang-name" x="15" y="10" class='lang-name'>
         Astro 0.82%
       </text>
     </g>
-  </g><g transform="translate(0, 25)">
-    <g class="stagger" style="animation-delay: 600ms">
+  </g><g transform="translate(0, 75)">
+    <g class="stagger" style="animation-delay: 900ms">
       <circle cx="5" cy="6" r="5" fill="#ff3e00" />
       <text data-testid="lang-name" x="15" y="10" class='lang-name'>
         Svelte 0.82%
-      </text>
-    </g>
-  </g><g transform="translate(0, 50)">
-    <g class="stagger" style="animation-delay: 750ms">
-      <circle cx="5" cy="6" r="5" fill="#ff6347" />
-      <text data-testid="lang-name" x="15" y="10" class='lang-name'>
-        Stylus 0.82%
-      </text>
-    </g>
-  </g><g transform="translate(0, 75)">
-    <g class="stagger" style="animation-delay: 900ms">
-      <circle cx="5" cy="6" r="5" fill="#fcb32c" />
-      <text data-testid="lang-name" x="15" y="10" class='lang-name'>
-        MDX 0.82%
       </text>
     </g>
   </g></g>
