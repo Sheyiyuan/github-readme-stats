@@ -202,7 +202,7 @@
           y="0"
           width="11.91"
           height="8"
-          fill="#000080"
+          fill="#239dad"
         />
       
       
@@ -258,9 +258,9 @@
     </g>
   </g><g transform="translate(0, 75)">
     <g class="stagger" style="animation-delay: 900ms">
-      <circle cx="5" cy="6" r="5" fill="#000080" />
+      <circle cx="5" cy="6" r="5" fill="#239dad" />
       <text data-testid="lang-name" x="15" y="10" class='lang-name'>
-        Lua 0.76%
+        Typst 0.76%
       </text>
     </g>
   </g></g>
