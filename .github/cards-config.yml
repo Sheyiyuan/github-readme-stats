@@ -25,9 +25,7 @@ cards:
       title_color: 3178C6
       text_color: 666666
       icon_color: 3178C6
-      rank_icon: global/default
-      rank_icon_x_offset: 4
-      rank_icon_y_offset: -4
+      rank_icon: default
 
   # 语言统计卡片
   - name: top-langs
