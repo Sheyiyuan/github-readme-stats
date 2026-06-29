@@ -9,7 +9,7 @@
         aria-labelledby="descId"
       >
         <title id="titleId">&#31038;&#20134;&#22253; &#30340; GitHub &#32479;&#35745;&#25968;&#25454;, Rank: B+</title>
-        <desc id="descId">获标星数: 33, 累计提交总数  (去年) : 664, 发起的 PR 总数: 95, 提出的 issue 总数: 7, 贡献的项目数（去年）: 14</desc>
+        <desc id="descId">获标星数: 33, 累计提交总数  (去年) : 664, 发起的 PR 总数: 95, 提出的 issue 总数: 7, 贡献的项目数（去年）: 13</desc>
         <style>
           .header {
             font: 600 18px 'Segoe UI', Ubuntu, Sans-Serif;
@@ -225,7 +225,7 @@
         x="219.01"
         y="12.5"
         data-testid="contribs"
-      >14</text>
+      >13</text>
     </g>
   </g>
     </svg>
