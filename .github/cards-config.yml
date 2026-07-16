@@ -124,6 +124,18 @@ cards:
       tech_stack: Go
       description_lines_count: 3
 
+  # 贡献活跃图
+  - name: contributions
+    filename: contributions.svg
+    endpoint: /api/contributions/
+    params:
+      username: Sheyiyuan
+      title: 社亦园 的 GitHub 在线游戏时长
+      hide_border: true
+      theme: transparent
+      title_color: 3178C6
+      text_color: 666666
+
 # Release 配置
 release:
   enabled: true

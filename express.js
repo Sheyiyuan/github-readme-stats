@@ -5,6 +5,7 @@ import repoCardCustom from "./api/pin-custom.js";
 import langCard from "./api/top-langs.js";
 import wakatimeCard from "./api/wakatime.js";
 import gistCard from "./api/gist.js";
+import contributionsCard from "./api/contributions.js";
 import express from "express";
 
 const app = express();
@@ -16,6 +17,7 @@ router.get("/pin-custom", repoCardCustom);
 router.get("/top-langs", langCard);
 router.get("/wakatime", wakatimeCard);
 router.get("/gist", gistCard);
+router.get("/contributions", contributionsCard);
 
 app.use("/api", router);
 
