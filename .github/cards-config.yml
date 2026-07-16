@@ -108,6 +108,22 @@ cards:
       tech_stack: FastAPI,Python,Vue
       description_lines_count: 3
 
+  # Half-Pi 项目卡片（自定义版本，带技术栈）
+  - name: half-pi
+    filename: half-pi.svg
+    endpoint: /api/pin-custom/
+    params:
+      username: Sheyiyuan
+      repo: half-pi
+      theme: transparent
+      hide_border: true
+      title_color: 3178C6
+      text_color: 666666
+      icon_color: 3178C6
+      show_owner: false
+      tech_stack: Go
+      description_lines_count: 3
+
 # Release 配置
 release:
   enabled: true
