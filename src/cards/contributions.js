@@ -53,8 +53,8 @@ const renderContributionsCard = (contributions, options = {}) => {
   const weeks = contributions.weeks || [];
   const totalContributions = contributions.totalContributions || 0;
 
-  // Green scale matching GitHub's classic look
-  const LEVEL_COLORS = ["#ebedf0", "#9be9a8", "#40c463", "#30a14e", "#216e39"];
+  // Blue scale matching #3178C6 brand color
+  const LEVEL_COLORS = ["#ebedf0", "#c8d9f0", "#7aadde", "#3178C6", "#1a4f8a"];
 
   const getLevel = (count) => {
     if (count <= 0) return 0;
