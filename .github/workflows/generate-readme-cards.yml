@@ -105,25 +105,22 @@ jobs:
             
             echo "Generating $NAME card..."
             
-            # 构建参数字符串
-            PARAMS=""
+            # 收集参数，用 --data-urlencode 确保编码正确
+            ARGS=()
             PARAM_KEYS=$(yq ".cards[$i].params | keys | .[]" $CONFIG_FILE)
             
             while IFS= read -r key; do
               value=$(yq ".cards[$i].params.$key" $CONFIG_FILE)
               # 处理 theme: transparent，转换为 bg_color
               if [ "$key" = "theme" ] && [ "$value" = "transparent" ]; then
-                PARAMS="${PARAMS}&bg_color=00000000"
+                ARGS+=("--data-urlencode" "bg_color=00000000")
               else
-                PARAMS="${PARAMS}&${key}=${value}"
+                ARGS+=("--data-urlencode" "${key}=${value}")
               fi
             done <<< "$PARAM_KEYS"
             
-            # 去掉开头的 &
-            PARAMS="${PARAMS:1}"
-            
-            # 发起请求
-            curl -s "${BASE_URL}${ENDPOINT}?${PARAMS}" -o "cards/${FILENAME}"
+            # 发起请求（-G 把 --data-urlencode 转为 query string）
+            curl -s -G "${BASE_URL}${ENDPOINT}" "${ARGS[@]}" -o "cards/${FILENAME}"
             
             echo "✓ Generated cards/${FILENAME}"
           done
